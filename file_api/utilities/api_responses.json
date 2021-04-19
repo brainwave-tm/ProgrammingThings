@@ -1,0 +1,20 @@
+{
+    "OK": {
+        "name": "OK",
+        "detail": "Request sent successfully."
+    },
+    "MONGODB_ERROR": {
+        "name": "MONGODB_ERROR",
+        "detail": "An error occurred when saving to the MongoDB Database."
+    },
+    "NO_FILES": {
+        "name": "NO_FILES",
+        "detail": "No files were uploaded."
+    },
+    "INVALID_BODY": {
+        "name": "INVALID_BODY"
+    },
+    "INVALID_QUERY": {
+        "name": "INVALID_QUERY"
+    }
+}
