@@ -36,7 +36,11 @@ It only accepts the phrases *'ARM'* and *'DISARM'* currently, as well as only th
 ---
 
 ## Harrison - Frontend Web UI ##
-(fill in as required)
+The frontend UI consists of 1 small React website that allows a user to interact and view events within the home security system.
+
+The web ui is located in the *'pt-ui'* folder and can be run using the *'npm start'* command.
+
+To connect to the API the URL's located in the *'.env'* file may need to be changed if you want to point it to a local instance of the file_api or the live version.
 
 ---
 
