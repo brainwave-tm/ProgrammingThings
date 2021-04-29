@@ -12,6 +12,7 @@ window.env = {
   "ComSpec": "C:\\Windows\\system32\\cmd.exe",
   "dp0": "U:\\1 - UNIVERSITY\\FinalYear\\Programming Things\\PT-GIT\\pt-ui\\node_modules\\.bin\\",
   "DriverData": "C:\\Windows\\System32\\Drivers\\DriverData",
+  "FILE_API_URL": "http://localhost:5000",
   "GIT_ASKPASS": "c:\\Users\\coolh\\AppData\\Local\\Programs\\Microsoft VS Code\\resources\\app\\extensions\\git\\dist\\askpass.sh",
   "HOME": "C:\\Users\\coolh",
   "HOMEDRIVE": "C:",

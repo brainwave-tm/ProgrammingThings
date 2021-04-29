@@ -2,6 +2,8 @@
 const express = require("express");
 const app = express();
 
+const {gen, api_responses} = require("./utilities/create_response");
+
 // Load the contents of the .env file into the process.env variable //
 const dotenv = require("dotenv");
 dotenv.config();
@@ -32,6 +34,27 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
     next();
 });
+
+// MQTT Commands //
+var mqtt = require('mqtt')
+var client  = mqtt.connect('mqtt://homesecurity.jakestringer.dev')
+client.on('connect', function () {
+    console.log("MQTT connected")
+    // client.publish('arm_system', "DISARM")
+})
+app.post("/api/arm-home", (req, res) => {
+    console.log("Arm recieved")
+    client.publish('arm_system', "ARM")
+    return res.send(gen({}))
+    
+})
+app.post("/api/disarm-home", (req, res) => {
+    console.log("Disarm recieved")
+    client.publish('arm_system', "DISARM")
+    return res.send(gen({}))
+})
+
+// END MQTT //
 
 app.use(express.json()); // So we can parse and use JSON //
 app.use(fileUpload({createParentPath: true})); // https://attacomsian.com/blog/uploading-files-nodejs-express //

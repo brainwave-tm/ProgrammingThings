@@ -14,6 +14,29 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+  const sendArmRequest = () => {
+    debugger;
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ arm: true })
+    };
+    fetch(env.FILE_API_URL + "/api/arm-home", requestOptions)
+      .then(response => response.json())
+      .then(data => {});
+  }
+
+  const sendDisarmRequest = () => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ arm: true })
+    };
+    fetch(env.FILE_API_URL + "/api/disarm-home", requestOptions)
+      .then(response => response.json())
+      .then(data => {});
+  }
+
   return (
     <div className="app">
       <Navbar bg="dark" variant="dark" expand="lg">
@@ -29,8 +52,8 @@ function App() {
           <Col md={4} className="text-center">
             <h3>Available Actions</h3>
             <div className="d-flex justify-content-around">
-              <Button>Arm</Button>
-              <Button>Disarm</Button>
+              <Button onClick={sendArmRequest}>Arm</Button>
+              <Button onClick={sendDisarmRequest}>Disarm</Button>
             </div>
           </Col>
         </Row>

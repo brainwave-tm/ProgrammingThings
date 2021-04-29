@@ -16,6 +16,7 @@
     "express-fileupload": "^1.2.1",
     "lodash": "^4.17.21",
     "mongoose": "^5.12.4",
+    "mqtt": "^4.2.6",
     "sharp": "^0.28.1"
   },
   "devDependencies": {
