@@ -45,7 +45,7 @@ client.on('connect', function () {
 
     client.subscribe([EVENT_TYPE.PI_ONLINE, EVENT_TYPE.ARM_SYSTEM]);
 
-    client.on('message', function (topic, message) {
+    client.on('message', function (topic, message, packet) {
         console.log("Received information from client: ", topic, message.toString())
         if (topic == EVENT_TYPE.PI_ONLINE || topic == EVENT_TYPE.ARM_SYSTEM) {
             let event = new eventModel({type: topic, timestamp: Date.now(), value: message});
@@ -57,7 +57,7 @@ client.on('connect', function () {
             })
         }
     });
-})
+});
 
 client.on("error",function(error){
     console.log(error)
@@ -89,5 +89,14 @@ const eventRouter = require("./routes/event.routes");
 const { EVENT_TYPE } = require("./utilities/enums");
 app.use("/api", [uploadRouter, feedRouter]);
 app.use("/api/events", eventRouter);
+
+function exitHandler() {
+    console.log("I am disconnecting");
+    client.removeAllListeners();
+    client.end();
+}
+
+process.on("SIGINT", exitHandler.bind())
+process.on("exit", exitHandler.bind())
 
 module.exports = app;
