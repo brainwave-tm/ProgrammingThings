@@ -46,14 +46,14 @@ client.on('connect', function () {
     client.subscribe([EVENT_TYPE.PI_ONLINE, EVENT_TYPE.ARM_SYSTEM]);
 
     client.on('message', function (topic, message) {
-        console.log(topic, message.toString())
+        console.log("Received information from client: ", topic, message.toString())
         if (topic == EVENT_TYPE.PI_ONLINE || topic == EVENT_TYPE.ARM_SYSTEM) {
             let event = new eventModel({type: topic, timestamp: Date.now(), value: message});
             event.validate((err) => {
-                if (err) console.log(err.message)
+                if (err) console.log("Error in message: " + err.message)
                 event.save()
                     .then(doc => console.log("saved event"))
-                    .catch(err => console.log(err.message));
+                    .catch(err => console.log("Error in saving: " + err.message));
             })
         }
     });
