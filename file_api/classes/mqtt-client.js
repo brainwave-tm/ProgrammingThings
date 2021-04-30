@@ -1,11 +1,9 @@
 var mqtt = require('mqtt')
 
-//  + Math.random().toString()
-
 class MQTTClient {
     constructor() {
         var options = {
-            clientId: 'file_api',
+            clientId: 'file_api' + Math.random().toString(),
             username: process.env.BROKER_USERNAME,
             password: process.env.BROKER_PASSWORD,
             clean: true

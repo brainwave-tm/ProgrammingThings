@@ -40,7 +40,7 @@ app.use(function (req, res, next) {
 // MQTT Commands //
 var client = require("./classes/mqtt-client").client
 
-client.on('connect', function () {
+client.on('connect', function (packet) {
     console.log("MQTT connected")
 
     client.subscribe([EVENT_TYPE.PI_ONLINE, EVENT_TYPE.ARM_SYSTEM]);
