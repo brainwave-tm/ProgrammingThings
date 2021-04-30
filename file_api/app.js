@@ -67,13 +67,13 @@ client.on("error",function(error){
 app.post("/api/arm-home", (req, res) => {
     // console.log("Arm recieved")
     client.publish(EVENT_TYPE.ARM_SYSTEM, "ARM")
-    return res.send(gen({}))
+    return res.send(gen({payload: {"connected": client.connected}}))
 
 })
 app.post("/api/disarm-home", (req, res) => {
     // console.log("Disarm recieved")
     client.publish(EVENT_TYPE.ARM_SYSTEM, "DISARM")
-    return res.send(gen({}))
+    return res.send(gen({payload: {"connected": client.connected}}))
 })
 // END MQTT //
 
@@ -99,5 +99,10 @@ function exitHandler() {
 
 process.on("SIGINT", exitHandler.bind())
 process.on("exit", exitHandler.bind())
+process.on("beforeExit", exitHandler.bind())
+process.on("SIGUSR1", exitHandler.bind());
+process.on("SIGUSR2", exitHandler.bind());
+process.on('uncaughtException', exitHandler.bind());
+
 
 module.exports = app;
