@@ -37,7 +37,14 @@ app.use(function(req, res, next) {
 
 // MQTT Commands //
 var mqtt = require('mqtt')
-var client  = mqtt.connect('mqtt://homesecurity.jakestringer.dev')
+
+var options = {
+    username: "test",
+    password: "test"
+}
+
+var client  = mqtt.connect('mqtt://homesecurity.jakestringer.dev', options)
+
 client.on('connect', function () {
     console.log("MQTT connected")
     // client.publish('arm_system', "DISARM")
