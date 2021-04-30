@@ -53,7 +53,8 @@ client.on('connect', function () {
                 if (err) console.log("Error in message: " + err.message)
                 event.save()
                     .then(doc => console.log("saved event"))
-                    .catch(err => console.log("Error in saving: " + err.message));
+                    .catch(err => console.log("Error in saving: " + err.message))
+                    .finally(() => client.end());
             })
         }
     });
