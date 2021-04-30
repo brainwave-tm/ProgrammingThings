@@ -8,7 +8,7 @@ import json
 clientUsername = "homesecurity"
 clientPassword = "eKsF3pQfJWttgevpP2n6CyRWQaeGx5ZdUntYNQ8x7QwrXetcQWPuj7gC5T6EUVpfGJRZ3"
 
-url = "http://api.homesecurity.jakestringer.dev/api/upload"
+url = "https://api.homesecurity.jakestringer.dev/api/upload"
 payload = {'detected_face': 'false'}
 headers = {}
 
