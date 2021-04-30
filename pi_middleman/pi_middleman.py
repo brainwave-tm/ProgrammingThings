@@ -5,6 +5,9 @@ import pygame
 import pygame.camera
 import json
 
+clientUsername = "homesecurity"
+clientPassword = "eKsF3pQfJWttgevpP2n6CyRWQaeGx5ZdUntYNQ8x7QwrXetcQWPuj7gC5T6EUVpfGJRZ3"
+
 url = "http://api.homesecurity.jakestringer.dev/api/upload"
 payload = {'detected_face': 'false'}
 headers = {}
@@ -19,7 +22,7 @@ def messageFunction (client, userdata, message):
     global systemArmed
     topic = str(message.topic)
     message = str(message.payload.decode("utf-8"))
-    if topic == "arm_system":
+    if topic == "ARM_SYSTEM":
         if message == "ARM":
             systemArmed = True
         elif message == "DISARM":
@@ -50,23 +53,22 @@ def execute_app():
         jsonResp = json.loads(response.text)
         print(jsonResp['code'])
 
-        #ourClient.publish("arm_system", "ARM") # Publish message to MQTT broker
         time.sleep(5) # Wait for selected time
 
 def main():
     try:
         execute_app()
     finally:
-        ourClient.publish("pi_online", "FALSE")
+        ourClient.publish("PI_ONLINE", "FALSE")
         ourClient.loop_stop()
         ourClient.disconnect()
 
 ourClient = mqtt.Client("pi_middleman") # Create a MQTT client object
-ourClient.username_pw_set(username="homesecurity", password="SQgYS6amWzZmx66d5a7x4n6P2B2k3WpRF8qXtZHg4nMeeXKFpw73vNPaHbKjpEDMav28ZH9KEXk3qgPyZBmxJWGu8L6vkWcFqcEc")
+ourClient.username_pw_set(username=clientUsername, password=clientPassword)
 ourClient.connect("homesecurity.jakestringer.dev", 1883) # Connect to the test MQTT broker
-ourClient.subscribe("arm_system") # Subscribe to the topic arm_system
+ourClient.subscribe("ARM_SYSTEM") # Subscribe to the topic arm_system
 ourClient.on_message = messageFunction # Attach the messageFunction to subscription
 ourClient.loop_start() # Start the MQTT client
-ourClient.publish("pi_online", "TRUE")
-ourClient.publish("arm_system", "DISARM") # Publish message to MQTT broker
+ourClient.publish("PI_ONLINE", "TRUE")
+ourClient.publish("ARM_SYSTEM", "DISARM") # Publish message to MQTT broker
 main()
