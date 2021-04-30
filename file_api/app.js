@@ -43,11 +43,11 @@ var client = require("./classes/mqtt-client").client
 client.on('connect', function () {
     console.log("MQTT connected")
 
-    client.subscribe(["ONLINE", "ARM_SYSTEM"]);
+    client.subscribe([EVENT_TYPE.PI_ONLINE, EVENT_TYPE.ARM_SYSTEM]);
 
-    client.on('message', function (topic, message, packet) {
+    client.on('message', function (topic, message) {
         console.log(topic, message.toString())
-        if (topic == "ONLINE" || topic == "ARM_SYSTEM") {
+        if (topic == EVENT_TYPE.PI_ONLINE || topic == EVENT_TYPE.ARM_SYSTEM) {
             let event = new eventModel({type: topic, timestamp: Date.now(), value: message});
             event.validate((err) => {
                 if (err) console.log(err.message)
@@ -65,13 +65,13 @@ client.on("error",function(error){
 
 app.post("/api/arm-home", (req, res) => {
     // console.log("Arm recieved")
-    client.publish('ARM_SYSTEM', "ARM")
+    client.publish(EVENT_TYPE.ARM_SYSTEM, "ARM")
     return res.send(gen({}))
 
 })
 app.post("/api/disarm-home", (req, res) => {
     // console.log("Disarm recieved")
-    client.publish('ARM_SYSTEM', "DISARM")
+    client.publish(EVENT_TYPE.ARM_SYSTEM, "DISARM")
     return res.send(gen({}))
 })
 // END MQTT //
@@ -86,6 +86,7 @@ app.listen(5000, () => console.log("Server is up and running."));
 const uploadRouter = require("./routes/upload.routes");
 const feedRouter = require("./routes/feed.routes");
 const eventRouter = require("./routes/event.routes");
+const { EVENT_TYPE } = require("./utilities/enums");
 app.use("/api", [uploadRouter, feedRouter]);
 app.use("/api/events", eventRouter);
 
