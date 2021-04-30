@@ -22,3 +22,12 @@ module.exports.get = (req, res) => {
         return res.send(gen({payload: results_paginated}));
     })
 }
+
+module.exports.status = (req, res) => {
+    // Get latest PI_STATUS //
+    eventModel.find({type: "PI_ONLINE"}, {value: 1, _id: 0}).limit(1).then(result => {
+        if(result) {
+            return res.send(gen({payload: result[0]}));
+        } else return res.send(gen({code: api_responses.INVALID_QUERY}));
+    })
+}
