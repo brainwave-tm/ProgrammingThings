@@ -19,13 +19,16 @@ module.exports.get = (req, res) => {
     if(!req.query.offset || !req.query.limit) return res.send(gen({code: api_responses.INVALID_QUERY, message: "You must supply pagination parameters (offset/limit) with your request."}));
     eventModel.find({}, {__v: 0, _id: 0}).sort("-timestamp").then(results => {
         let results_paginated = _.take(_.drop(results, req.query.offset), req.query.limit);
+        results_paginated.forEach(element => {
+            if(element.type === "DETECTED_FACE") element.image = (process.env.LOCAL === "true" ? "http://localhost:5000/uploaded/faces/" : "https://api.homesecurity.jakestringer.dev/uploaded/faces/") + element.image;
+        });
         return res.send(gen({payload: results_paginated}));
     })
 }
 
 module.exports.status = (req, res) => {
     // Get latest PI_STATUS //
-    eventModel.find({type: "PI_ONLINE"}, {value: 1, _id: 0}).limit(1).then(result => {
+    eventModel.find({type: "PI_ONLINE"}, {value: 1, _id: 0}).sort("-timestamp").limit(1).then(result => {
         if(result) {
             return res.send(gen({payload: result[0]}));
         } else return res.send(gen({code: api_responses.INVALID_QUERY}));
