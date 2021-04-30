@@ -2,7 +2,9 @@
 const express = require("express");
 const app = express();
 
-const {gen, api_responses} = require("./utilities/create_response");
+const { gen, api_responses } = require("./utilities/create_response");
+const eventModel = require("./models/event.model");
+const _ = require("lodash");
 
 // Load the contents of the .env file into the process.env variable //
 const dotenv = require("dotenv");
@@ -26,9 +28,9 @@ db.mongoose.connect(db.connection_string, {
 
 // CORS //
 const cors = require("cors");
-app.use(cors({origin: "*"}));
+app.use(cors({ origin: "*" }));
 app.options("*", cors());
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
@@ -36,35 +38,46 @@ app.use(function(req, res, next) {
 });
 
 // MQTT Commands //
-var mqtt = require('mqtt')
-
-var options = {
-    username: "test",
-    password: "test"
-}
-
-var client  = mqtt.connect('mqtt://homesecurity.jakestringer.dev', options)
+var client = require("./classes/mqtt-client").client
 
 client.on('connect', function () {
     console.log("MQTT connected")
-    // client.publish('arm_system', "DISARM")
-})
-app.post("/api/arm-home", (req, res) => {
-    console.log("Arm recieved")
-    client.publish('arm_system', "ARM")
-    return res.send(gen({}))
-    
-})
-app.post("/api/disarm-home", (req, res) => {
-    console.log("Disarm recieved")
-    client.publish('arm_system', "DISARM")
-    return res.send(gen({}))
+
+    client.subscribe(["ONLINE", "ARM_SYSTEM"]);
+
+    client.on('message', function (topic, message, packet) {
+        console.log(topic, message.toString())
+        if (topic == "ONLINE" || topic == "ARM_SYSTEM") {
+            let event = new eventModel({type: topic, timestamp: Date.now(), value: message});
+            event.validate((err) => {
+                if (err) console.log(err.message)
+                event.save()
+                    .then(doc => console.log("saved event"))
+                    .catch(err => console.log(err.message));
+            })
+        }
+    });
 })
 
+client.on("error",function(error){
+    console.log(error)
+})
+
+app.post("/api/arm-home", (req, res) => {
+    // console.log("Arm recieved")
+    client.publish('ARM_SYSTEM', "ARM")
+    return res.send(gen({}))
+
+})
+app.post("/api/disarm-home", (req, res) => {
+    // console.log("Disarm recieved")
+    client.publish('ARM_SYSTEM', "DISARM")
+    return res.send(gen({}))
+})
 // END MQTT //
 
 app.use(express.json()); // So we can parse and use JSON //
-app.use(fileUpload({createParentPath: true})); // https://attacomsian.com/blog/uploading-files-nodejs-express //
+app.use(fileUpload({ createParentPath: true })); // https://attacomsian.com/blog/uploading-files-nodejs-express //
 app.use("/uploaded", express.static(__dirname + "/uploaded")); // Expose the 'uploaded' folder //
 
 app.listen(5000, () => console.log("Server is up and running."));
