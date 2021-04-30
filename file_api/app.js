@@ -5,6 +5,7 @@ const app = express();
 const { gen, api_responses } = require("./utilities/create_response");
 const eventModel = require("./models/event.model");
 const _ = require("lodash");
+const enums = require("./utilities/enums");
 
 // Load the contents of the .env file into the process.env variable //
 const dotenv = require("dotenv");
@@ -42,22 +43,22 @@ var client = require("./classes/mqtt-client").client
 
 client.on('connect', function (packet) {
     console.log("MQTT connected")
+});
 
-    client.subscribe([EVENT_TYPE.PI_ONLINE, EVENT_TYPE.ARM_SYSTEM]);
+client.subscribe([enums.EVENT_TYPE.PI_ONLINE, enums.EVENT_TYPE.ARM_SYSTEM]);
 
-    client.on('message', function (topic, message, packet) {
-        console.log("Received information from client: ", topic, message.toString())
-        if (topic == EVENT_TYPE.PI_ONLINE || topic == EVENT_TYPE.ARM_SYSTEM) {
-            let event = new eventModel({type: topic, timestamp: Date.now(), value: message});
-            event.validate((err) => {
-                if (err) console.log("Error in message: " + err.message)
-                event.save()
-                    .then(doc => console.log("saved event"))
-                    .catch(err => console.log("Error in saving: " + err.message))
-                    .finally(() => client.end());
-            })
-        }
-    });
+client.on('message', function (topic, message, packet) {
+    console.log("Received information from client: ", topic, message.toString())
+    if (topic == enums.EVENT_TYPE.PI_ONLINE || topic == enums.EVENT_TYPE.ARM_SYSTEM) {
+        let event = new eventModel({type: topic, timestamp: Date.now(), value: message});
+        event.validate((err) => {
+            if (err) console.log("Error in message: " + err.message)
+            event.save()
+                .then(doc => console.log("saved event"))
+                .catch(err => console.log("Error in saving: " + err.message))
+                .finally(() => console.log("Done"));
+        })
+    }
 });
 
 client.on("error",function(error){
@@ -103,6 +104,5 @@ process.on("beforeExit", exitHandler.bind())
 process.on("SIGUSR1", exitHandler.bind());
 process.on("SIGUSR2", exitHandler.bind());
 process.on('uncaughtException', exitHandler.bind());
-
 
 module.exports = app;
