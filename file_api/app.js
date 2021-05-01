@@ -43,9 +43,11 @@ var client = require("./classes/mqtt-client").client
 
 client.on('connect', function (packet) {
     console.log("MQTT connected")
+
+    client.subscribe([enums.EVENT_TYPE.PI_ONLINE, enums.EVENT_TYPE.ARM_SYSTEM]);
 });
 
-client.subscribe([enums.EVENT_TYPE.PI_ONLINE, enums.EVENT_TYPE.ARM_SYSTEM]);
+
 
 client.on('message', function (topic, message, packet) {
     console.log("Received information from client: ", topic, message.toString())
