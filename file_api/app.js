@@ -56,7 +56,7 @@ client.on('message', function (topic, message, packet) {
         event.validate((err) => {
             if (err) console.log("Error in message: " + err.message)
             event.save()
-                .then(doc => console.log("Event Saved in DB: " + doc.toJSON()))
+                .then(doc => console.log("Event Saved in DB: " + doc.toString()))
                 .catch(err => console.log("Error in saving: " + err.message))
                 .finally(() => console.log("Done"));
         })
@@ -105,6 +105,6 @@ process.on("exit", exitHandler.bind())
 process.on("beforeExit", exitHandler.bind())
 process.on("SIGUSR1", exitHandler.bind());
 process.on("SIGUSR2", exitHandler.bind());
-process.on('uncaughtException', exitHandler.bind());
+process.on("uncaughtException", exitHandler.bind());
 
 module.exports = app;
