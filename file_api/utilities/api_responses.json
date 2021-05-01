@@ -16,5 +16,8 @@
     },
     "INVALID_QUERY": {
         "name": "INVALID_QUERY"
+    },
+    "JIMP_ERROR": {
+        "name": "JIMP_ERROR"
     }
 }

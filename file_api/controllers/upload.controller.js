@@ -1,6 +1,7 @@
 const {gen, api_responses} = require("../utilities/create_response");
 const sharp = require("sharp");
 const eventModel = require("../models/event.model");
+const Jimp = require("jimp");
 
 module.exports.upload = (req, res) => {
     if(!req.files) return res.send(gen({code: api_responses.NO_FILES}));
@@ -24,9 +25,44 @@ module.exports.upload = (req, res) => {
                 value: "TRUE",
                 image: filename
             });
-            event.save().then(() => res.send(gen({})))
+            event.save().then(() => {
+                try {
+                    editSavedImage("./uploaded/faces/" + filename, true);
+                } catch (err) {
+                    return res.send(gen({code: api_responses.JIMP_ERROR, message: err}))
+                }
+                return res.send(gen({}));
+            })
         });
     } else {
-        sharp_image.resize({height: 500, width: 500}).toFile("./uploaded/feed.jpg").then(() => res.send(gen({})));
+        sharp_image.resize({height: 500, width: 500}).toFile("./uploaded/feed.jpg").then(() => {
+            try {
+                editSavedImage("./uploaded/feed.jpg", false);
+            } catch (err) {
+                return res.send(gen({code: api_responses.JIMP_ERROR, message: err}))
+            }
+            return res.send(gen({}));
+        });
     }   
+}
+
+const editSavedImage = (path, detected_face) => {
+    Jimp.read(path, (err, img) => {
+        if(err) throw err;
+        Jimp.loadFont(Jimp.FONT_SANS_16_BLACK).then(font => {
+            if(detected_face) {
+                Jimp.read("./assets/rect.png", (rect_err, rect) => {
+                    if(rect_err) throw rect_err;
+                    rect.resize(150, 150);
+                    img.blit(rect, 100, 150).print(font, 125, 130, "Detected Face").write(path);
+                })
+            } else {
+                Jimp.read("./assets/scanning.png", (scan_err, scan) => {
+                    if(scan_err) throw scan_err;
+                    scan.scale(0.5);
+                    img.blit(scan, 0, 0).write(path);
+                })
+            }
+        })
+    })
 }

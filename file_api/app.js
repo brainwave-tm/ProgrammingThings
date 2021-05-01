@@ -91,17 +91,18 @@ const { EVENT_TYPE } = require("./utilities/enums");
 app.use("/api", [uploadRouter, feedRouter]);
 app.use("/api/events", eventRouter);
 
-function exitHandler() {
+function exitHandler(code) {
+    console.log(code);
     console.log("I am disconnecting");
     client.removeAllListeners();
     client.end();
 }
 
-process.on("SIGINT", exitHandler.bind())
-process.on("exit", exitHandler.bind())
-process.on("beforeExit", exitHandler.bind())
-process.on("SIGUSR1", exitHandler.bind());
-process.on("SIGUSR2", exitHandler.bind());
-process.on("uncaughtException", exitHandler.bind());
+process.on("SIGINT", exitHandler.bind(null, "SIGINT"))
+process.on("exit", exitHandler.bind(null, "exit"))
+process.on("beforeExit", exitHandler.bind(null, "beforeExit"))
+process.on("SIGUSR1", exitHandler.bind(null, "SIGUSR1"));
+process.on("SIGUSR2", exitHandler.bind(null, "SIGUSR2"));
+process.on("uncaughtException", exitHandler.bind(null, "SIGINT"));
 
 module.exports = app;
