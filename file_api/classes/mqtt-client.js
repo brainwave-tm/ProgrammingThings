@@ -3,7 +3,7 @@ var mqtt = require('mqtt')
 class MQTTClient {
     constructor() {
         var options = {
-            clientId: (process.env.LOCAL === "true" ? "LOCAL_INSTANCE_" : "SERVER_INSTANCE_") + 'file_api_' + Math.random().toString(),
+            clientId: (process.env.LOCAL === "true" ? "LOCAL_INSTANCE_" : "SERVER_INSTANCE_") + 'file_api',
             username: process.env.BROKER_USERNAME,
             password: process.env.BROKER_PASSWORD,
             clean: true
