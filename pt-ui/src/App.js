@@ -109,6 +109,9 @@ function App() {
       case "PI_ONLINE":
         return event.value === "TRUE" ? "Pi is online" : "Pi is now offline"
         break;
+      case "DETECTED_FACE":
+        return "Face detected"
+        break;
     }
   }
 
