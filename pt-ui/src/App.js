@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
-import { Container, Row, Col, Button, Navbar, Image, Table, Modal } from 'react-bootstrap'
+import { Container, Row, Col, Button, Navbar, Image, Table, Modal, Card } from 'react-bootstrap'
 import env from "react-dotenv";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './dashboard.css';
@@ -34,7 +34,7 @@ function App() {
           }
 
         })
-      fetch(`${env.API_URL}api/recent-faces?offset=0&limit=5`)
+      fetch(`${env.API_URL}api/recent-faces?offset=0&limit=10`)
         .then(res => res.json())
         .then(returnedData => {
           if (returnedData.payload !== null) {
@@ -64,7 +64,7 @@ function App() {
 
       })
     //Recent faces
-    fetch(`${env.API_URL}api/recent-faces?offset=0&limit=5`)
+    fetch(`${env.API_URL}api/recent-faces?offset=0&limit=10`)
       .then(res => res.json())
       .then(returnedData => {
         if (returnedData.payload !== null) {
@@ -105,12 +105,11 @@ function App() {
     switch (event.type) {
       case "ARM_SYSTEM":
         return event.value === "ARM" ? "System has been armed" : "System has been disarmed"
-        break;
       case "PI_ONLINE":
         return event.value === "TRUE" ? "Pi is online" : "Pi is now offline"
-        break;
       case "DETECTED_FACE":
         return "Face detected"
+      default:
         break;
     }
   }
@@ -126,7 +125,7 @@ function App() {
           <Col>
             <h5><b>{piOnlineStatus === "ONLINE" ? "Live camera feed (Updates every 5 seconds)" : "Last image from Pi"}</b></h5>
             <div className="card">
-              <Image src={camFeedURL} fluid />
+              <Image src={camFeedURL} fluid/>
             </div>
             <h5 className="mt-4"><b>Events (last 10)</b></h5>
             <div className="card">
@@ -163,17 +162,22 @@ function App() {
                 <Button onClick={sendArmRequest}>Arm</Button>}
               </div>
             </div>
-            <h5 className="mt-4"><b>Last 5 face detections</b></h5>
-            <div className="card">
-              <Table>
+            <h5 className="mt-4"><b>Last 10 face detections</b></h5>
+            <div className="d-flex flex-direction-row flex-wrap">
+              {recentfaces.map(face => (
+                <Card className="d-flex">
+                  <img src={face} alt="detected face" width={155} height={155} className="d-flex"/>
+                </Card>
+              ))}
+              {/* <Table>
                 <tbody>
                   {recentfaces.map(face => (
                     <tr>
-                      <td><img src={face} /></td>
+                      <td><img src={face} alt="detected face" width={250} height={250}/></td>
                     </tr>
                   ))}
                 </tbody>
-              </Table>
+              </Table> */}
             </div>
           </Col>
         </Row>
