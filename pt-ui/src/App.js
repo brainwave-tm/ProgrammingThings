@@ -28,6 +28,7 @@ function App() {
       fetch(`${env.API_URL}api/events/status`)
         .then(res => res.json())
         .then(returnedData => {
+          if(returnedData.payload.value === undefined) return;
           if (returnedData.payload.value !== null) {
             setPiOnlineStatus(returnedData.payload.piStatus.value === "TRUE" ? "ONLINE" : "OFFLINE");
             setArmedStatus(returnedData.payload.armedStatus.value === "ARM" ? "ARMED" : "DISARMED")
@@ -57,8 +58,9 @@ function App() {
     fetch(`${env.API_URL}api/events/status`)
       .then(res => res.json())
       .then(returnedData => {
+        if(returnedData.payload.value === undefined) return;
         if (returnedData.payload.value !== null) {
-          setPiOnlineStatus(returnedData.payload.value === "TRUE" ? "ONLINE" : "OFFLINE");
+          setPiOnlineStatus(returnedData.payload.piStatus.value === "TRUE" ? "ONLINE" : "OFFLINE");
           setArmedStatus(returnedData.payload.armedStatus.value === "ARM" ? "ARMED" : "DISARMED")
         }
 
