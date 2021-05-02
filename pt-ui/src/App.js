@@ -28,10 +28,14 @@ function App() {
       fetch(`${env.API_URL}api/events/status`)
         .then(res => res.json())
         .then(returnedData => {
-          if(returnedData.payload.value === undefined) return;
-          if (returnedData.payload.value !== null) {
-            setPiOnlineStatus(returnedData.payload.piStatus.value === "TRUE" ? "ONLINE" : "OFFLINE");
-            setArmedStatus(returnedData.payload.armedStatus.value === "ARM" ? "ARMED" : "DISARMED")
+          if(returnedData.payload === undefined) return;
+          if (returnedData.payload !== null) {
+            if(returnedData.payload.piStatus) {
+              setPiOnlineStatus(returnedData.payload.piStatus.value === "TRUE" ? "ONLINE" : "OFFLINE");
+            }
+            if(returnedData.payload.armedStatus) {
+              setArmedStatus(returnedData.payload.armedStatus.value === "ARM" ? "ARMED" : "DISARMED")
+            }
           }
 
         })
@@ -58,10 +62,14 @@ function App() {
     fetch(`${env.API_URL}api/events/status`)
       .then(res => res.json())
       .then(returnedData => {
-        if(returnedData.payload.value === undefined) return;
-        if (returnedData.payload.value !== null) {
-          setPiOnlineStatus(returnedData.payload.piStatus.value === "TRUE" ? "ONLINE" : "OFFLINE");
-          setArmedStatus(returnedData.payload.armedStatus.value === "ARM" ? "ARMED" : "DISARMED")
+        if(returnedData.payload === undefined) return;
+        if (returnedData.payload !== null) {
+          if(returnedData.payload.piStatus) {
+            setPiOnlineStatus(returnedData.payload.piStatus.value === "TRUE" ? "ONLINE" : "OFFLINE");
+          }
+          if(returnedData.payload.armedStatus) {
+            setArmedStatus(returnedData.payload.armedStatus.value === "ARM" ? "ARMED" : "DISARMED")
+          }          
         }
 
       })
@@ -167,7 +175,7 @@ function App() {
             <h5 className="mt-4"><b>Last 10 face detections</b></h5>
             <div className="d-flex flex-direction-row flex-wrap">
               {recentfaces.map(face => (
-                <Card className="d-flex">
+                <Card className="d-flex" onClick={() => {setPopupImageUrl(face); handlePopupShow()}}>
                   <img src={face} alt="detected face" width={155} height={155} className="d-flex"/>
                 </Card>
               ))}
