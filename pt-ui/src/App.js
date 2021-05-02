@@ -152,22 +152,26 @@ function App() {
               <p>Pi Status: <span className={piOnlineStatus == "ONLINE" ? "font-weight-bold text-success" : "font-weight-bold text-danger"}>{piOnlineStatus}</span></p>
               <p>System Status: <span className={armedStatus == "ARMED" ? "font-weight-bold text-success" : "font-weight-bold text-danger"}>{armedStatus}</span></p>
             </div>
-            <div className="text-center">
-              <h3>Available Actions</h3>
+            <h5 className="mt-4"><b>Available Actions</b></h5>
+            <div className="text-center card">
               <div className="d-flex justify-content-around">
-                <Button onClick={sendArmRequest}>Arm</Button>
-                <Button onClick={sendDisarmRequest}>Disarm</Button>
+                {armedStatus == "ARMED" ? 
+                <Button onClick={sendDisarmRequest}>Disarm</Button> : 
+                <Button onClick={sendArmRequest}>Arm</Button>}
               </div>
             </div>
-            <Table>
-              <tbody>
-                {recentfaces.map(face => (
-                  <tr>
-                    <td><img src={face} /></td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
+            <h5 className="mt-4"><b>Last 5 face detections</b></h5>
+            <div className="card">
+              <Table>
+                <tbody>
+                  {recentfaces.map(face => (
+                    <tr>
+                      <td><img src={face} /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
           </Col>
         </Row>
       </Container>
