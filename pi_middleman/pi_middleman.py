@@ -4,6 +4,7 @@ import requests
 import pygame
 import pygame.camera
 import json
+import face_detection
 
 clientUsername = "homesecurity"
 clientPassword = "eKsF3pQfJWttgevpP2n6CyRWQaeGx5ZdUntYNQ8x7QwrXetcQWPuj7gC5T6EUVpfGJRZ3"
@@ -44,10 +45,20 @@ def execute_app():
         pygame.image.save(img, "/home/pi/Documents/feed.jpg")
         print("Pic taken")
         cam.stop()
-
+        
+        detections = face_detection.main("Documents/feed.jpg")
+        print(detections)
+        
+        faces_detected, known_faces, names, coords = detections
+        
         files=[
             ('feed',('feed.jpg',open('/home/pi/Documents/feed.jpg', 'rb'), 'image/png'))
         ]
+        
+        if (faces_detected):
+            payload = {'detected_face': 'true'}
+        else:
+            payload = {'detected_face': 'false'}
         
         response = requests.request("POST", url, headers=headers, data=payload, files=files)
         jsonResp = json.loads(response.text)
