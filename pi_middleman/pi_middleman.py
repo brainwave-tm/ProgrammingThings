@@ -15,7 +15,7 @@ headers = {}
 
 pygame.camera.init()
 pygame.camera.list_cameras()
-cam = pygame.camera.Camera("/dev/video0", (500, 500))
+cam = pygame.camera.Camera("/dev/video0", (640, 480))
 systemArmed = False    
 
 # Our "on message" event
@@ -45,24 +45,36 @@ def execute_app():
         pygame.image.save(img, "/home/pi/Documents/feed.jpg")
         print("Pic taken")
         cam.stop()
-        
-        detections = face_detection.main("Documents/feed.jpg")
-        print(detections)
-        
-        faces_detected, known_faces, names, coords = detections
-        
+
         files=[
             ('feed',('feed.jpg',open('/home/pi/Documents/feed.jpg', 'rb'), 'image/png'))
         ]
-        
-        if (faces_detected):
-            payload = {'detected_face': 'true'}
+
+        if(systemArmed):
+            detections = face_detection.main("/home/pi/Documents/feed.jpg")
+            faces_detected, known_faces, names, coords = detections
+            if(faces_detected):
+                imageData = {
+                    "detected": faces_detected,
+                    "name": names[0],
+                    "coords": coords[0][0]
+                }
+            else:
+                imageData = {
+                    "detected": faces_detected,
+                }
         else:
-            payload = {'detected_face': 'false'}
+            imageData = {
+                "detected": False
+            }
+
+        payload = imageData
+        print(imageData)
         
         response = requests.request("POST", url, headers=headers, data=payload, files=files)
-        jsonResp = json.loads(response.text)
-        print(jsonResp['code'])
+        #jsonResp = json.loads(response.text)
+        #print(jsonResp['code'])
+        print(response.text)
 
         time.sleep(5) # Wait for selected time
 
