@@ -1,0 +1,14 @@
+.card {
+    border-radius: 4px;
+    box-shadow: 0 0 14px 0 rgb(53 64 82 / 5%);
+    padding: 10px;
+}
+
+.card img {
+    border-radius: 4px;
+}
+
+.app {
+    background-color: #F7F9FC;
+    min-height: 100vh;
+}
