@@ -108,7 +108,7 @@ function App() {
       case "PI_ONLINE":
         return event.value === "TRUE" ? "Pi is online" : "Pi is now offline"
       case "DETECTED_FACE":
-        return "Face detected"
+        return "Face detected - " + (event.value === "Unknown" ? "UNKNOWN FACE!" : event.value + " detected.")
       default:
         break;
     }
@@ -173,7 +173,7 @@ function App() {
                 <tbody>
                   {recentfaces.map(face => (
                     <tr>
-                      <td><img src={face} alt="detected face" width={250} height={250}/></td>
+                      <td><img src={face} alt="detected face"/></td>
                     </tr>
                   ))}
                 </tbody>

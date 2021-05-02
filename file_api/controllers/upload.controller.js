@@ -11,7 +11,6 @@ module.exports.upload = (req, res) => {
 
     // Validate the request //
     if(req.body.detected === undefined) return res.send(gen({code: api_responses.INVALID_BODY, message: "Couldn't find 'detected' in your body"}));
-    if(req.body.known === undefined) return res.send(gen({code: api_responses.INVALID_BODY, message: "Couldn't find 'known' in your body"}));
     
     if(req.body.detected === "true") {
         if(req.body.name === undefined) return res.send(gen({code: api_responses.INVALID_BODY, message: "Couldn't find 'name' in your body"}));
@@ -62,22 +61,41 @@ const editSavedImage = (path, coords, name) => {
         if(err) throw err;
         Jimp.loadFont(Jimp.FONT_SANS_32_WHITE).then(font => {
             if(coords) {
-                Jimp.read("./assets/rect.png", (rect_err, rect) => {
-                    if(rect_err) throw rect_err;
-                    
-                    let top = eval(coords[0]);
-                    let right = eval(coords[1]);
-                    let bottom = eval(coords[2]);
-                    let left = eval(coords[3]);
-
-                    let width = right - left;
-                    let height = bottom - top;
-
-                    var textWidth = Jimp.measureText(font, name);
-
-                    rect.resize(width, height);
-                    img.blit(rect, left, top).print(font, (left + (width / 2)) - textWidth / 2, top - 40, name).write(path);
-                })
+                if(name === "Unknown") {
+                    Jimp.read("./assets/rect_unrecognised.png", (rect_err, rect) => {
+                        if(rect_err) throw rect_err;
+                        
+                        let top = eval(coords[0]);
+                        let right = eval(coords[1]);
+                        let bottom = eval(coords[2]);
+                        let left = eval(coords[3]);
+    
+                        let width = right - left;
+                        let height = bottom - top;
+    
+                        var textWidth = Jimp.measureText(font, name);
+    
+                        rect.resize(width, height);
+                        img.blit(rect, left, top).print(font, (left + (width / 2)) - textWidth / 2, top - 40, name).write(path);
+                    })
+                } else {
+                    Jimp.read("./assets/rect_recognised.png", (rect_err, rect) => {
+                        if(rect_err) throw rect_err;
+                        
+                        let top = eval(coords[0]);
+                        let right = eval(coords[1]);
+                        let bottom = eval(coords[2]);
+                        let left = eval(coords[3]);
+    
+                        let width = right - left;
+                        let height = bottom - top;
+    
+                        var textWidth = Jimp.measureText(font, name);
+    
+                        rect.resize(width, height);
+                        img.blit(rect, left, top).print(font, (left + (width / 2)) - textWidth / 2, top - 40, name).write(path);
+                    })
+                }
             } else {
                 eventModel.findOne({type: "ARM_SYSTEM"}, {value: 1}).sort("-timestamp").then(result => {
                     if(result) {
