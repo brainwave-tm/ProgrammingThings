@@ -1,4 +1,6 @@
 # Programming Things #
+## For documentation of all areas of the project please see the WIKI attached to the Github repository ##
+
 
 ## Jake - NodeRED Backend API ##
 Backend API is currently hosted at **https://api.homesecurity.jakestringer.dev**. Source code for it can be found in the 'file_api' folder in this repository.
