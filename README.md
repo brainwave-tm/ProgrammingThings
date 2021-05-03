@@ -1,5 +1,5 @@
 # Programming Things #
-## For documentation of all areas of the project please see the WIKI atached to the Github repository ##
+## For documentation of all areas of the project please see the WIKI attached to the Github repository ##
 
 
 ## Jake - NodeRED Backend API ##
