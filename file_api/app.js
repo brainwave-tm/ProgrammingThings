@@ -92,6 +92,10 @@ process.on("exit", exitHandler.bind(null, "exit"))
 process.on("beforeExit", exitHandler.bind(null, "beforeExit"))
 process.on("SIGUSR1", exitHandler.bind(null, "SIGUSR1"));
 process.on("SIGUSR2", exitHandler.bind(null, "SIGUSR2"));
-process.on("uncaughtException", exitHandler.bind(null, "SIGINT"));
+process.on("uncaughtException", exitHandler.bind(null, "uncaughtException"));
+process.on("SIGKILL", exitHandler.bind(null, "SIGKILL"))
+process.on("SIGBREAK", exitHandler.bind(null, "SIGBREAK"))
+process.on("SIGQUIT", exitHandler.bind(null, "SIGQUIT"))
+process.on("SIGTERM", exitHandler.bind(null, "SIGTERM"))
 
 module.exports = app;
