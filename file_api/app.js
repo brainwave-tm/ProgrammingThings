@@ -64,17 +64,6 @@ client.on("error",function(error){
     console.log(error)
 })
 
-app.post("/api/arm-home", (req, res) => {
-    // console.log("Arm recieved")
-    client.publish(EVENT_TYPE.ARM_SYSTEM, "ARM")
-    return res.send(gen({payload: {"connected": client.connected}}))
-
-})
-app.post("/api/disarm-home", (req, res) => {
-    // console.log("Disarm recieved")
-    client.publish(EVENT_TYPE.ARM_SYSTEM, "DISARM")
-    return res.send(gen({payload: {"connected": client.connected}}))
-})
 // END MQTT //
 
 app.use(express.json()); // So we can parse and use JSON //
@@ -87,8 +76,8 @@ app.listen(5000, () => console.log("Server is up and running."));
 const uploadRouter = require("./routes/upload.routes");
 const feedRouter = require("./routes/feed.routes");
 const eventRouter = require("./routes/event.routes");
-const { EVENT_TYPE } = require("./utilities/enums");
-app.use("/api", [uploadRouter, feedRouter]);
+const armRouter = require("./routes/arm.routes");
+app.use("/api", [uploadRouter, feedRouter, armRouter]);
 app.use("/api/events", eventRouter);
 
 function exitHandler(code) {

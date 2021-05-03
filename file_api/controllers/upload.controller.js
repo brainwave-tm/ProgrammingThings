@@ -76,7 +76,15 @@ const editSavedImage = (path, coords, name) => {
                         var textWidth = Jimp.measureText(font, name);
     
                         rect.resize(width, height);
-                        img.blit(rect, left, top).print(font, (left + (width / 2)) - textWidth / 2, top - 40, name).write(path);
+                        img
+                          .blit(rect, left, top)
+                          .print(
+                            font,
+                            left + width / 2 - textWidth / 2,
+                            top - 40,
+                            name
+                          )
+                          .write(path);
                     })
                 } else {
                     Jimp.read("./assets/rect_recognised.png", (rect_err, rect) => {
