@@ -8,14 +8,14 @@ module.exports.upload = (req, res) => {
     if(!req.files.feed) return res.send(gen({code: api_responses.INVALID_BODY, message: "You must include an image with the key 'feed' as part of your request"}));
 
     req.body = JSON.parse(JSON.stringify(req.body));
-    req.body.coords = JSON.parse(req.body.coords);
-
+    
     // Validate the request //
     if(req.body.detected === undefined) return res.send(gen({code: api_responses.INVALID_BODY, message: "Couldn't find 'detected' in your body"}));
     
     if(req.body.detected === "true") {
         if(req.body.name === undefined) return res.send(gen({code: api_responses.INVALID_BODY, message: "Couldn't find 'name' in your body"}));
         if(req.body.coords === undefined) return res.send(gen({code: api_responses.INVALID_BODY, message: "Couldn't find 'coords' in your body"}));
+        req.body.coords = JSON.parse(req.body.coords);
     }
 
     // Read the image //
